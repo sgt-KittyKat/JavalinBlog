@@ -2,12 +2,9 @@ package com.github.sgt_kittyKat.blog.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.sgt_kittyKat.blog.utils.commands.postCommands.Delete;
-import com.github.sgt_kittyKat.blog.utils.commands.postCommands.ReadVip;
+import com.github.sgt_kittyKat.blog.utils.commands.postCommands.*;
 import com.github.sgt_kittyKat.blog.services.PostService;
 import com.github.sgt_kittyKat.blog.services.UserService;
-import com.github.sgt_kittyKat.blog.utils.commands.postCommands.Create;
-import com.github.sgt_kittyKat.blog.utils.commands.postCommands.Read;
 import com.github.sgt_kittyKat.blog.utils.commands.userCommands.Patch;
 import com.github.sgt_kittyKat.blog.database.models.MyRole;
 import com.github.sgt_kittyKat.blog.database.models.Post;

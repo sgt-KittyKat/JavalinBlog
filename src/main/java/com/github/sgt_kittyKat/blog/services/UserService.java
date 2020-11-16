@@ -2,7 +2,6 @@ package com.github.sgt_kittyKat.blog.services;
 
 import com.github.sgt_kittyKat.blog.database.config.DatabaseConfiguration;
 import com.github.sgt_kittyKat.blog.database.models.MyRole;
-import com.github.sgt_kittyKat.blog.database.models.Notification;
 import com.github.sgt_kittyKat.blog.database.models.User;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.spring.DaoFactory;
@@ -34,7 +33,6 @@ public class UserService {
     }
 
     public void patchUser(User target) throws SQLException {
-        target.setPassword(BCrypt.hashpw(target.getPassword(), BCrypt.gensalt()));
         dao.update(target);
     }
 

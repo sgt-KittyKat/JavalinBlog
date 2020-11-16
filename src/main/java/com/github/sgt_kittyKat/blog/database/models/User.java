@@ -1,6 +1,7 @@
 package com.github.sgt_kittyKat.blog.database.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import io.javalin.core.security.Role;
@@ -32,7 +33,7 @@ public class User {
         this.login = login;
         this.password = password;
     }
-
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

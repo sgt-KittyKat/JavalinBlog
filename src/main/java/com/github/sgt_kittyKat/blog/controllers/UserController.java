@@ -10,6 +10,7 @@ import com.github.sgt_kittyKat.blog.utils.commands.userCommands.Read;
 import com.github.sgt_kittyKat.blog.database.models.MyRole;
 import com.github.sgt_kittyKat.blog.database.models.User;
 import io.javalin.http.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -105,6 +106,9 @@ public class UserController implements Controller{
             User target = service.findUserById(id);
             User updated = om.readValue(context.body(), User.class);
             if (sender.equals(target) && target.changesAllowed(updated)) {
+                if (updated.getPassword() != null) {
+                    updated.setPassword(BCrypt.hashpw(updated.getPassword(), BCrypt.gensalt()));
+                }
                 service.patchUser(updated);
             }
             else {
@@ -122,7 +126,7 @@ public class UserController implements Controller{
             String role = context.pathParam("role");
             if (Patch.permittedRoles.contains(sender.getRole()) &&
                     !Patch.forbiddenRoles.contains(target.getRole())) {
-                target.setRole(MyRole.valueOf(role));  
+                target.setRole(MyRole.valueOf(role));
                 service.patchUser(target);
             }
             else {
