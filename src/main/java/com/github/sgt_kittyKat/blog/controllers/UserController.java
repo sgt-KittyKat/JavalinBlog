@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sgt_kittyKat.blog.services.UserService;
 import com.github.sgt_kittyKat.blog.utils.commands.userCommands.Create;
 import com.github.sgt_kittyKat.blog.utils.commands.userCommands.Delete;
+import com.github.sgt_kittyKat.blog.utils.commands.userCommands.Patch;
 import com.github.sgt_kittyKat.blog.utils.commands.userCommands.Read;
 import com.github.sgt_kittyKat.blog.database.models.MyRole;
 import com.github.sgt_kittyKat.blog.database.models.User;
@@ -21,7 +22,6 @@ public class UserController implements Controller{
         this.service = service;
         this.om = om;
     }
-
     public User findSender(Context context) throws SQLException {
         if (!context.basicAuthCredentialsExist()) {
             return new User(MyRole.EMPTY);
@@ -104,13 +104,31 @@ public class UserController implements Controller{
             Integer id = Integer.parseInt(context.pathParam("id"));
             User target = service.findUserById(id);
             User updated = om.readValue(context.body(), User.class);
-            if (sender.equals(target)) {
+            if (sender.equals(target) && target.changesAllowed(updated)) {
                 service.patchUser(updated);
             }
             else {
                 throw new ForbiddenResponse();
             }
         } catch (SQLException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+    public void changeRole(Context context) {
+        try {
+            User sender = findSender(context);
+            Integer id = Integer.parseInt(context.pathParam("id"));
+            User target = service.findUserById(id);
+            String role = context.pathParam("role");
+            if (Patch.permittedRoles.contains(sender.getRole()) &&
+                    !Patch.forbiddenRoles.contains(target.getRole())) {
+                target.setRole(MyRole.valueOf(role));  
+                service.patchUser(target);
+            }
+            else {
+                throw new ForbiddenResponse();
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

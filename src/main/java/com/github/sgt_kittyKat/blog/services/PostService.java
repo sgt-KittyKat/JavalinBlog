@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.spring.DaoFactory;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class PostService {
     private Dao<Post, Integer> dao;
@@ -27,13 +28,13 @@ public class PostService {
     public void createPost(Post post) throws SQLException {
         dao.create(post);
     }
-    public void savePost(Post post) throws SQLException {
+    public void patchPost(Post post) throws SQLException {
         dao.update(post);
-    }
-    public Post getPost(Integer id) throws SQLException {
-        return dao.queryForId(id);
     }
     public void delete(Integer id) throws SQLException {
         dao.deleteById(id);
+    }
+    public List<Post> getAll() throws SQLException{
+        return dao.queryForAll();
     }
 }

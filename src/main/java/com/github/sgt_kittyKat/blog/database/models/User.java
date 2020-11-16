@@ -19,8 +19,6 @@ public class User {
     private String login;
     @DatabaseField
     private String password;
-    @JsonIgnore
-    private List<Notification> notifications;
 
     public User() {
     }
@@ -29,11 +27,10 @@ public class User {
         this.role = role;
     }
 
-    public User(String login, String password, List<Notification> notifications) {
+    public User(String login, String password) {
         this.id = 0;
         this.login = login;
         this.password = password;
-        this.notifications = notifications;
     }
 
     public String getPassword() {
@@ -52,14 +49,6 @@ public class User {
         this.login = login;
     }
 
-
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
 
     public int getId() {
         return id;
@@ -85,12 +74,26 @@ public class User {
         return id == user.id &&
                 role == user.role &&
                 Objects.equals(login, user.login) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(notifications, user.notifications);
+                Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, role, login, password, notifications);
+        return Objects.hash(id, role, login, password);
+    }
+    public boolean onlyRoleChanged(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password);
+    }
+    public boolean changesAllowed(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                Objects.equals(role, user.role);
     }
 }

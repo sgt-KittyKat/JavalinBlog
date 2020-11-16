@@ -43,20 +43,6 @@ public class UserService {
         dao.create(created);
     }
 
-    public boolean isValidUser(String login) throws SQLException {
-        User user = findUserByLogin(login);
-        if (user != null) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean authorizeUser(User user, Set <Role> permittedRoles) {
-        if (permittedRoles.contains(user.getRole())) {
-            return true;
-        }
-        return false;
-    }
     public List<User> getAll() throws SQLException {
         return dao.queryForAll();
     }
@@ -75,16 +61,6 @@ public class UserService {
             else {
                 return false;
             }
-        }
-    }
-
-    public void notifyUser(User user, Notification notification) {
-        user.getNotifications().add(notification);
-    }
-    public void askForVip(User requester, User admin) {
-        if (admin.getRole().equals(MyRole.ADMIN)) {
-            String message = "User " + requester.getLogin() + " asks for VIP";
-            notifyUser(admin, new Notification(message, admin));
         }
     }
     public User findUserByLogin(String login) throws SQLException {

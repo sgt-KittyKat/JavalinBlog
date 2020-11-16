@@ -17,12 +17,14 @@ import io.javalin.http.ForbiddenResponse;
 import io.javalin.http.UnauthorizedResponse;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostController implements Controller{
     private PostService postService;
     private ObjectMapper om;
     private UserService userService;
-    PostController(PostService postService, ObjectMapper om, UserService userService) {
+    public PostController(PostService postService, ObjectMapper om, UserService userService) {
         this.postService = postService;
         this.om = om;
         this.userService = userService;
@@ -90,11 +92,12 @@ public class PostController implements Controller{
     public void patch(Context context) {
         try {
             User sender = findSender(context);
-            Integer id = Integer.parseInt(context.pathParam("id"));
-            Post target = postService.findById(id);
             Post updated = om.readValue(context.body(), Post.class);
             if (Patch.permittedRoles.contains(sender.getRole())) {
-                postService.savePost(updated);
+                postService.patchPost(updated);
+            }
+            else {
+                throw new ForbiddenResponse();
             }
         } catch (SQLException | JsonProcessingException e) {
             e.printStackTrace();
@@ -113,5 +116,17 @@ public class PostController implements Controller{
             e.printStackTrace();
         }
     }
-
+    public void getAll(Context context) {
+        try {
+            User sender = findSender(context);
+            if (Read.permittedRoles.contains(sender.getRole())) {
+                context.result(om.writeValueAsString(postService.getAll()));
+            }
+            else {
+                throw new ForbiddenResponse();
+            }
+        } catch (SQLException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -5,18 +5,19 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
 public class Post {
-    @DatabaseField
+    @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField
     private String content;
     @DatabaseField
     private String heading;
     @DatabaseField
-    private String date_created;
+    private String dateCreated;
     @DatabaseField
     private boolean isForVip;
-    @DatabaseField
-    private User creator;
+
+    public Post() {
+    }
 
     public int getId() {
         return id;
@@ -42,12 +43,12 @@ public class Post {
         this.heading = heading;
     }
 
-    public String getDate_created() {
-        return date_created;
+    public String getDateCreated() {
+        return dateCreated;
     }
 
     public void setDate_created(String date_created) {
-        this.date_created = date_created;
+        this.dateCreated = date_created;
     }
 
     public boolean isForVip() {
@@ -56,13 +57,5 @@ public class Post {
 
     public void setForVip(boolean forVip) {
         isForVip = forVip;
-    }
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
     }
 }
